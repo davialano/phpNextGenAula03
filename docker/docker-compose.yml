@@ -1,0 +1,7 @@
+services:
+  php:
+    container_name: php
+    image: webdevops/php-dev:8.3-alpine
+    volumes:
+      - ../:/app
+    working_dir: /app
