@@ -2,7 +2,7 @@
 
 namespace App\Response;
 
-use Src\Response\Exceptions\IntervalMethodNotFoundException;
+use App\Response\Exceptions\IntervalMethodNotFoundException;
 use InvalidArgumentException;
 
 /**
@@ -28,15 +28,6 @@ class Expires
         'years'
     ];
 
-    /**
-     * Obs: 
-     * $method = o nome do método invocado ex: days
-     * $param[0] = o primeiro parametro capturado pelo __call
-     * 
-     * Ex: $expires->days(10)
-     * $method = 'days'
-     * $params[0] = 10
-     */
     public function __call(string $method, array $params): mixed
     {
         if (false === in_array($method, self::DATETIME_LIST)) {

@@ -1,5 +1,5 @@
 <?php
-namespace Src\Response\Exceptions;
+namespace App\Response\Exceptions;
 
 final class IntervalMethodNotFoundException extends \Exception
 { }

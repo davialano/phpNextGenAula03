@@ -7,7 +7,7 @@ class DisplayHeaders implements HeaderStringInterface
 {
     protected array $headers = [];
 
-    public function add(HeaderStringInterface $header): void
+    public function add(HeaderStringInterface | string $header): void
     {
         $this->headers[] = $header->getHeaderString();
     }
@@ -17,7 +17,7 @@ class DisplayHeaders implements HeaderStringInterface
         if (count($this->headers) === 0) {
             throw new \Exception('There is no headers to display');
         }
-        return implode("\n", $this->headers);
+        return implode("\r\n", $this->headers);
     }
 
     public function displayInFile(string $filePath): void
