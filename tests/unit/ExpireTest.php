@@ -1,10 +1,11 @@
 <?php
 
+use App\Response\Exceptions\IntervalMethodNotFoundException;
 use App\Response\Expires;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/** 
- * Descobrir quais testes estão faltando para cobrir essa classe completamente
- */
+#[CoversClass(Expires::class)]
 final class ExpireTest extends PHPUnit\Framework\TestCase
 {
     protected Expires $expires;
@@ -14,7 +15,7 @@ final class ExpireTest extends PHPUnit\Framework\TestCase
         $this->expires = new Expires();
     }
 
-    public function datesDataProvider()
+    public static function datesDataProvider()
     {
         return [
             ['seconds', 30, '30 seconds'],
@@ -27,16 +28,14 @@ final class ExpireTest extends PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider datesDataProvider
-     */
+    #[DataProvider('datesDataProvider')]
     public function testExpiresComponentDisplayExpireString($method, $value, $result)
     {
         $this->expires->$method($value);
         $this->assertEquals($result, $this->expires->get());
     }
 
-    public function datesMultipleDataProvider()
+    public static function datesMultipleDataProvider()
     {
         return [
             [ ['seconds', 'minutes'], 2, '2 seconds + 2 minutes' ],
@@ -53,9 +52,7 @@ final class ExpireTest extends PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider datesMultipleDataProvider
-     */
+    #[DataProvider('datesMultipleDataProvider')]
     public function testExpiresComponentDisplayMultipleExpireString(array $methods, $value, $result)
     {
         foreach ($methods as $method) {
@@ -64,7 +61,7 @@ final class ExpireTest extends PHPUnit\Framework\TestCase
         $this->assertEquals($result, $this->expires->get());
     }
 
-    public function datesMultipleValuesAndMethods()
+    public static function datesMultipleValuesAndMethodsDataProvider()
     {
         return [
             [['seconds', 'minutes', 'hours'], [2, 30, 5], '2 seconds + 30 minutes + 5 hours'],
@@ -76,9 +73,7 @@ final class ExpireTest extends PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider datesMultipleValuesAndMethods
-     */
+    #[DataProvider('datesMultipleValuesAndMethodsDataProvider')]
     public function testExpiresComponentDisplayMultipleFieldAndExpireString(
         array $methods, 
         array $values, 
@@ -90,9 +85,21 @@ final class ExpireTest extends PHPUnit\Framework\TestCase
         $this->assertEquals($result, $this->expires->get());
     }
 
+    public function testExpiresComponentShouldDisplayArrayError()
+    {
+        $this->expectException(IntervalMethodNotFoundException::class);
+        $this->expires->teste(1);
+    }
+    
     public function testExpiresComponentShouldDisplayIntError()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expires->days('2');
+    }
+
+    public function testExpiresComponentShouldDisplayNegativeParameterError()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expires->days(-5);
     }
 }

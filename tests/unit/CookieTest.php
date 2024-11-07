@@ -2,10 +2,13 @@
 
 use App\Response\Cookie;
 use App\Response\Expires;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-class CookieTest extends PHPUnit\Framework\TestCase
+#[CoversClass(Cookie::class)]
+final class CookieTest extends PHPUnit\Framework\TestCase
 {
-    public function positiveCookieDataProvider()
+    public static function positiveCookieDataProvider()
     {
         return [
             ['attribute', 'value', 'Set-Cookie: attribute=value'],
@@ -16,9 +19,7 @@ class CookieTest extends PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider positiveCookieDataProvider
-     */
+    #[DataProvider('positiveCookieDataProvider')]
     public function testCookieComponentShouldReturnCookieHeaderString(
         string $cookieName,
         string $cookieValue,
@@ -29,7 +30,7 @@ class CookieTest extends PHPUnit\Framework\TestCase
         $this->assertEquals($expect, $result);
     }
 
-    public function negativeCookieDataProvider()
+    public static function negativeCookieDataProvider()
     {
         return [
             ['aço', 'valor aqui', InvalidArgumentException::class],
@@ -39,10 +40,8 @@ class CookieTest extends PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider negativeCookieDataProvider
-     */
-    public function testCookieComponeteShouldNotAcceptWrongName(
+    #[DataProvider('negativeCookieDataProvider')]
+    public function testCookieComponenteShouldNotAcceptWrongName(
         string $cookieName,
         string $cookieValue,
         string $expect
@@ -51,7 +50,6 @@ class CookieTest extends PHPUnit\Framework\TestCase
         $cookie = new Cookie($cookieName, $cookieValue);
     }
 
-    #[Cookie]
     public function testCookieComponentShouldReturnValueUrlEncoded()
     {
         $cookie = new Cookie('attribute', 'a value with spaces');
@@ -59,14 +57,12 @@ class CookieTest extends PHPUnit\Framework\TestCase
         $this->assertEquals('Set-Cookie: attribute=a+value+with+spaces', $result);
     }
 
-    public function positiveCookieExpiresDataProvider(): array
+    public static function positiveCookieExpiresDataProvider(): array
     {
         return require 'fixture/DataProviders/positiveCookieExpires.php';
     }
 
-    /**
-     * @dataProvider positiveCookieExpiresDataProvider
-     */
+    #[DataProvider('positiveCookieExpiresDataProvider')]
     public function testCookieComponentShouldReturnExpiresAttribute(
         string $cookieName,
         string $cookieValue,
@@ -74,7 +70,7 @@ class CookieTest extends PHPUnit\Framework\TestCase
         string $expireInterval,
         string $expect
     ) {
-        $expiresMock = \Mockery::mock(Expires::class);
+        $expiresMock = $this->getExpiresMock();
 
         $expiresMock->expects()
                     ->get()
@@ -104,5 +100,10 @@ class CookieTest extends PHPUnit\Framework\TestCase
     protected function tearDown(): void
     {
         \Mockery::close();
+    }
+
+    protected function getExpiresMock(): Mockery\LegacyMockInterface|Expires
+    {
+        return Mockery::mock(Expires::class);
     }
 }
