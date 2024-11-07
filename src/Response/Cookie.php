@@ -1,10 +1,12 @@
 <?php
-namespace Headers\Response;
+
+namespace App\Response;
 
 use DateInterval;
 use DateTimeImmutable;
-use Headers\Interfaces\HeaderStringInterface;
+use App\Interfaces\HeaderStringInterface;
 use InvalidArgumentException;
+use App\Response\Expires;
 
 class Cookie implements HeaderStringInterface
 {

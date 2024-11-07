@@ -1,7 +1,7 @@
 <?php
-namespace Headers;
+namespace App;
 
-use Headers\Interfaces\HeaderStringInterface;
+use App\Interfaces\HeaderStringInterface;
 
 class DisplayHeaders implements HeaderStringInterface
 {

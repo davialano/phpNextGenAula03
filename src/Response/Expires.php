@@ -1,8 +1,8 @@
 <?php
 
-namespace Headers\Response;
+namespace App\Response;
 
-use Headers\Response\Exceptions\IntervalMethodNotFoundException;
+use Src\Response\Exceptions\IntervalMethodNotFoundException;
 use InvalidArgumentException;
 
 /**

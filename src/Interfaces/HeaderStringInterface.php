@@ -1,6 +1,6 @@
 <?php
 
-namespace Headers\Interfaces;
+namespace App\Interfaces;
 
 interface HeaderStringInterface
 {
